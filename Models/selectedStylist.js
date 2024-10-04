@@ -14,7 +14,7 @@ const selectedServiceSchema = new mongoose.Schema({
 const selectedStylistSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId, // Reference to the user who selects services
-    ref: "User", // Reference to your User model
+    ref: "Auth", // Reference to your User model
     required: true,
   },
   stylistId: {
