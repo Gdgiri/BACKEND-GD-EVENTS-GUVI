@@ -12,9 +12,11 @@ import {
   getAllStylist,
   getBookingDetails,
   getEventStylistById,
+  getFeedbacks,
   stripePayment,
   stylistCreate,
   stylistGet,
+  submitFeedback,
   updateEvent,
   updateEventStylist,
   updateStylistSelection,
@@ -52,5 +54,10 @@ router.get("/getbooked", getBookingDetails);
 // payment
 
 router.post("/payment", stripePayment);
+
+// feedback
+
+router.post("/createfeedback", submitFeedback);
+router.get("/getfeedback", getFeedbacks);
 
 export default router;
