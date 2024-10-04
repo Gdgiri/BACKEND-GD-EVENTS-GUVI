@@ -1,4 +1,6 @@
 import Event from "../Models/eventSchema.js";
+import EventSelection from "../Models/eventSelection.js";
+import EventStylist from "../Models/eventStylistSchema.js";
 
 // Create
 
@@ -115,5 +117,196 @@ export const deleteEvent = async (req, res) => {
     res.status(500).json({
       message: "event data failed to delete due to internal server error",
     });
+  }
+};
+
+// create EventStylist
+
+export const createEventStylist = async (req, res) => {
+  const { name, imgUrl, services } = req.body;
+
+  try {
+    const eventStylist = new EventStylist({ name, imgUrl, services });
+    await eventStylist.save();
+    res.status(200).json({
+      message: "event stylist created successfully",
+      result: eventStylist,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "event stylist created failed due to an internal server error",
+    });
+  }
+};
+
+// get AllEventStylist
+
+export const getAllStylist = async (req, res) => {
+  try {
+    const eventStylists = await EventStylist.find();
+    res
+      .status(200)
+      .json({ message: "event stylist fetch success", result: eventStylists });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "event stylist fetch failed due to an internal server error",
+    });
+  }
+};
+
+// get EventStylistId
+
+export const getEventStylistById = async (req, res) => {
+  const { id } = req.params;
+  console.log("hi", id);
+
+  try {
+    const eventStylist = await EventStylist.findById(id);
+    if (!eventStylist) {
+      return res.status(404).json({ message: "Event Stylist not found" });
+    }
+    res.status(200).json(eventStylist);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch Event Stylist" });
+  }
+};
+
+// Update EventStylist
+
+export const updateEventStylist = async (req, res) => {
+  const { id } = req.params;
+  const { name, imgUrl, services } = req.body;
+
+  try {
+    const updatedEventStylist = await EventStylist.findByIdAndUpdate(
+      id,
+      { name, imgUrl, services },
+      { new: true }
+    );
+    if (!updatedEventStylist) {
+      return res.status(404).json({ message: "Event Stylist not found" });
+    }
+    res.status(200).json({
+      message: "Event Stylist updated successfully",
+      result: updatedEventStylist,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to update Event Stylist" });
+  }
+};
+
+// delete Stylist
+
+export const deleteEventStylist = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedEventStylist = await EventStylist.findByIdAndDelete(id);
+    if (!deletedEventStylist) {
+      return res.status(404).json({ message: "Event Stylist not found" });
+    }
+    res.status(200).json({ message: "Event Stylist deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete Event Stylist" });
+  }
+};
+
+// userStylistCreate
+
+export const stylistCreate = async (req, res) => {
+  try {
+    const { totalStyleAmount, selectedItems } = req.body;
+
+    const newSelection = new EventSelection({
+      totalStyleAmount,
+      selectedItems,
+    });
+
+    await newSelection.save();
+    res
+      .status(201)
+      .json({ message: "Selection saved successfully", result: newSelection });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to save selection" });
+  }
+};
+
+// userSelectionget
+
+export const stylistGet = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the ID from the URL
+    const selection = await EventSelection.findById(id); // Find selection by ID
+
+    if (!selection) {
+      return res.status(404).json({ message: "Selection not found" });
+    }
+
+    res.status(200).json({ result: selection }); // Respond with the found selection
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch selection" });
+  }
+};
+
+// userSelectGetAll
+
+export const getAllSelection = async (req, res) => {
+  try {
+    const selections = await EventSelection.find();
+    res.status(200).json({ result: selections });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch selections" });
+  }
+};
+
+// update Stylist Selection
+
+export const updateStylistSelection = async (req, res) => {
+  try {
+    const { totalStyleAmount, selectedItems } = req.body;
+    const updatedSelection = await EventSelection.findByIdAndUpdate(
+      req.params.id,
+      { totalStyleAmount, selectedItems },
+      { new: true }
+    );
+
+    if (!updatedSelection) {
+      return res.status(404).json({ message: "Selection not found" });
+    }
+
+    res.status(200).json({
+      message: "Selection updated successfully",
+      result: updatedSelection,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to update selection" });
+  }
+};
+
+// delete Selection Stylist
+
+export const deleteSelectionStyle = async (req, res) => {
+  try {
+    const deletedSelection = await EventSelection.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!deletedSelection) {
+      return res.status(404).json({ message: "Selection not found" });
+    }
+
+    res.status(200).json({ message: "Selection deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete selection" });
   }
 };
