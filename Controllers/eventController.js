@@ -220,11 +220,12 @@ export const deleteEventStylist = async (req, res) => {
 
 export const stylistCreate = async (req, res) => {
   try {
-    const { totalStyleAmount, selectedItems } = req.body;
+    const { totalStyleAmount, selectedItems, userPreference } = req.body; // Add userPreference here
 
     const newSelection = new EventSelection({
       totalStyleAmount,
       selectedItems,
+      userPreference, // Now this is correctly defined
     });
 
     await newSelection.save();
@@ -274,7 +275,7 @@ export const updateStylistSelection = async (req, res) => {
     const { totalStyleAmount, selectedItems } = req.body;
     const updatedSelection = await EventSelection.findByIdAndUpdate(
       req.params.id,
-      { totalStyleAmount, selectedItems },
+      { totalStyleAmount, selectedItems, userPreference },
       { new: true }
     );
 
@@ -309,4 +310,55 @@ export const deleteSelectionStyle = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Failed to delete selection" });
   }
+};
+
+// booked
+
+export const createBooking = async (
+  userId,
+  stylistId,
+  selectionData,
+  totalAmount
+) => {
+  try {
+    // Create a new EventSelection entry
+    const newSelection = new EventSelection({
+      totalStyleAmount: selectionData.totalStyleAmount,
+      selectedItems: selectionData.selectedItems,
+    });
+    await newSelection.save();
+
+    // Create a new BookedEvent entry
+    const newBooking = new BookedEvent({
+      user: userId,
+      stylist: stylistId,
+      selection: newSelection._id, // Reference to the EventSelection
+      totalAmount: totalAmount,
+    });
+    await newBooking.save();
+
+    console.log("Booking created successfully!");
+  } catch (error) {
+    console.error("Error creating booking:", error);
+  }
+};
+
+// getBooking
+
+export const getBookingDetails = async (bookingId) => {
+  try {
+    const booking = await BookedEvent.findById(bookingId)
+      .populate("user") // Populate user details
+      .populate("stylist") // Populate stylist details
+      .populate("selection"); // Populate the selected services
+
+    console.log(booking);
+  } catch (error) {
+    console.error("Error fetching booking details:", error);
+  }
+};
+
+export const stripePayment = async (req, res) => {
+  console.log(req.body);
+  res.status(200).json({ message: "Working properly" });
 };

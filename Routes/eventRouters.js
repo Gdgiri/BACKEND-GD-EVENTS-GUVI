@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  createBooking,
   createEventStylist,
   deleteEvent,
   deleteEventStylist,
@@ -9,7 +10,9 @@ import {
   fetchId,
   getAllSelection,
   getAllStylist,
+  getBookingDetails,
   getEventStylistById,
+  stripePayment,
   stylistCreate,
   stylistGet,
   updateEvent,
@@ -40,5 +43,14 @@ router.get("/getselectstylist/:id", stylistGet);
 router.get("/getallselection", getAllSelection);
 router.put("/editselectionstyle/:id", updateStylistSelection);
 router.delete("/deleteselectionstyle/:id", deleteSelectionStyle);
+
+// booked
+
+router.post("/createbook", createBooking);
+router.get("/getbooked", getBookingDetails);
+
+// payment
+
+router.post("/payment", stripePayment);
 
 export default router;

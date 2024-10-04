@@ -9,6 +9,7 @@ const serviceOptionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+ 
 });
 
 const eventStylistSchema = new mongoose.Schema({
