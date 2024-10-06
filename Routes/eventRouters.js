@@ -1,7 +1,9 @@
 import express from "express";
 import {
+  createBooked,
   createBooking,
   createEventStylist,
+  createWedding,
   deleteEvent,
   deleteEventStylist,
   deleteSelectionStyle,
@@ -10,9 +12,12 @@ import {
   fetchId,
   getAllSelection,
   getAllStylist,
+  getAllWed,
+  getBooked,
   getBookingDetails,
   getEventStylistById,
   getFeedbacks,
+  getWed,
   stripePayment,
   stylistCreate,
   stylistGet,
@@ -46,6 +51,12 @@ router.get("/getallselection", getAllSelection);
 router.put("/editselectionstyle/:id", updateStylistSelection);
 router.delete("/deleteselectionstyle/:id", deleteSelectionStyle);
 
+// user wedding form
+
+router.post("/creatwed", createWedding);
+router.get("/getall", getAllWed);
+router.get("/getwed/:id", getWed);
+
 // booked
 
 router.post("/createbook", createBooking);
@@ -59,5 +70,10 @@ router.post("/payment", stripePayment);
 
 router.post("/createfeedback", submitFeedback);
 router.get("/getfeedback", getFeedbacks);
+
+// booking
+
+router.post("/createbooking", createBooked);
+router.get("/getbooking", getBooked);
 
 export default router;

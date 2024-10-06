@@ -1,7 +1,9 @@
+import Booking from "../Models/bookingSchema.js";
 import Event from "../Models/eventSchema.js";
 import EventSelection from "../Models/eventSelection.js";
 import EventStylist from "../Models/eventStylistSchema.js";
 import Feedback from "../Models/feedbackSchema.js";
+import User from "../Models/userSchema.js";
 
 // Create
 
@@ -313,6 +315,54 @@ export const deleteSelectionStyle = async (req, res) => {
   }
 };
 
+// user  wedding
+
+// create
+
+export const createWedding = async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Event created successfully", result: user });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Event not created due to an internal server error" });
+  }
+};
+
+// get All
+
+export const getAllWed = async (req, res) => {
+  try {
+    const users = await User.find();
+    res
+      .status(200)
+      .json({ message: "Data fetched successfully", result: users });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Fetching failed" });
+  }
+};
+
+// get by id
+
+export const getWed = async (req, res) => {
+  try {
+    const users = await User.findById(req.params.id);
+    if (!users) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+    res.status(200).json({ message: "Data fetched success", result: users });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "data fetch failed" });
+  }
+};
+
 // booked
 
 export const createBooking = async (
@@ -396,5 +446,39 @@ export const getFeedbacks = async (req, res) => {
   } catch (error) {
     console.error("Error fetching feedbacks:", error);
     res.status(500).json({ message: "Failed to fetch feedbacks", error });
+  }
+};
+
+// booking
+
+// create book
+
+export const createBooked = async (req, res) => {
+  const { venueName, venueAmount, venuePlace } = req.body;
+
+  const newBooking = new Booking({
+    venueName,
+    totalAmount,
+    venueAmount,
+    venuePlace,
+    venueImg,
+  });
+
+  try {
+    const savedBooking = await newBooking.save();
+    res.status(201).json({ message: "book create success", savedBooking });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// get book
+
+export const getBooked = async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    res.status(200).json({ message: "book fetched", bookings });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
