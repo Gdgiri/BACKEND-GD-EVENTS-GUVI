@@ -7,20 +7,19 @@ import eventRouter from "./Routes/eventRouters.js";
 
 dotenv.config();
 
-//Middleware
+// Middleware
 const app = express();
 
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://wedding-app-gdevents.netlify.app/",
+    origin: "https://wedding-app-gdevents.netlify.app", // Removed trailing slash
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-// error handler
-
+// Error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -31,25 +30,23 @@ app.use((err, req, res, next) => {
   });
 });
 
-//DB connectivity
+// DB connectivity
 MongoDB();
 
-// access the .env
+// Access the .env
 const port = process.env.PORT || 4000;
 const message = process.env.MESSAGE || "Hello, World!";
 
-//default routes
-
+// Default routes
 app.get("/", (req, res) => {
   res.status(200).send(message);
 });
 
-//API Routes
-
+// API Routes
 app.use("/api/auth", router);
 app.use("/api/event", eventRouter);
 
 // Listen
 app.listen(port, () => {
-  console.log(`Server is running`);
+  console.log(`Server is running on port ${port}`);
 });
