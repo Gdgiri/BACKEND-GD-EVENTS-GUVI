@@ -128,7 +128,7 @@ export const Forgot = async (req, res) => {
 
     await user.save();
 
-    const resetUrl = `http://localhost:3000/reset/${resetToken}`;
+    const resetUrl = `https://wedding-app-gdevents.netlify.app/reset/${resetToken}`;
     const message = `You requested a password reset. Click the link below to reset your password. ${resetUrl}`;
 
     try {
